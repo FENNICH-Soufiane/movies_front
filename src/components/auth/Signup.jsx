@@ -17,8 +17,8 @@ export default function Signup() {
           <Submit value="Sign up" />
 
           <div className="flex justify-between">
-            <CustomLink to="#">Forget password</CustomLink>
-            <CustomLink to="#">Sign in</CustomLink>
+            <CustomLink to="/auth/forget-password">Forget password</CustomLink>
+            <CustomLink to="/auth/signin">Sign in</CustomLink>
           </div>
         </form>
       </Container>
