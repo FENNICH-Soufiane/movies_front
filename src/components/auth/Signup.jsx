@@ -1,34 +1,25 @@
 import React from "react";
 import Container from "../Container";
+import CustomLink from "../CustomLink";
 import FormInput from "../form/FormInput";
-import Title from "../form/Title";
 import Submit from "../form/Submit";
+import Title from "../form/Title";
 
-export default function Signin() {
+export default function Signup() {
   return (
     <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
       <Container>
-      <form className="bg-secondary rounded p-6 w-72 space-y-6">
-          <Title>Sign in</Title>
+        <form className="bg-secondary rounded p-6 w-72 space-y-6">
+          <Title>Sign up</Title>
+          <FormInput label="Name" placeholder="John Doe" name="name" />
           <FormInput label="Email" placeholder="john@email.com" name="email" />
           <FormInput label="Password" placeholder="********" name="password" />
-          <Submit />
+          <Submit value="Sign up" />
 
           <div className="flex justify-between">
-            <a
-              className="text-dark-subtle hover:text-white transition"
-              href="#"
-            >
-              Forget password
-            </a>
-            <a
-              className="text-dark-subtle hover:text-white transition"
-              href="#"
-            >
-              Sign up
-            </a>
+            <CustomLink to="#">Forget password</CustomLink>
+            <CustomLink to="#">Sign in</CustomLink>
           </div>
-          
         </form>
       </Container>
     </div>
