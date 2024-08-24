@@ -1,9 +1,93 @@
+// import React, { useEffect, useRef, useState } from "react";
+// import Container from "../Container";
+// import Submit from "../form/Submit";
+// import Title from "../form/Title";
+
+// const OTP_LENGTH = 6;
+// let currentOTPIndex;
+
+// export default function EmailVerification() {
+//   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
+//   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
+
+//   const inputRef = useRef();
+
+//   const focusNextInputField = (index) => {
+//     setActiveOtpIndex(index + 1);
+//   };
+
+//   const focusPrevInputField = (index) => {
+//     let nextIndex;
+//     const diff = index - 1;
+//     nextIndex = diff !== 0 ? diff : 0;
+//     setActiveOtpIndex(nextIndex);
+//   };
+
+//   const handleOtpChange = ({ target }) => {
+//     const { value } = target;
+//     const newOtp = [...otp];
+//     newOtp[currentOTPIndex] = value.substring(value.length - 1, value.length);
+
+//     if (!value) focusPrevInputField(currentOTPIndex);
+//     else focusNextInputField(currentOTPIndex);
+//     setOtp([...newOtp]);
+//   };
+
+//   const handleKeyDown = ({ key }, index) => {
+//     currentOTPIndex = index;
+//     console.log(key)
+//     if (key === "ArrowLeft") {
+//       focusPrevInputField(currentOTPIndex);
+//     } else {
+//       focusNextInputField(currentOTPIndex)
+//     }
+//   };
+
+//   useEffect(() => {
+//     inputRef.current?.focus();
+//   }, [activeOtpIndex]);
+
+//   return (
+//     <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
+//       <Container>
+//         <form className="bg-secondary rounded p-6 space-y-6">
+//           <div>
+//             <Title>Please enter the OTP to verify your account</Title>
+//             <p className="text-center text-dark-subtle">
+//               OTP has been sent to your email
+//             </p>
+//           </div>
+
+//           <div className="flex justify-center items-center space-x-4">
+//             {otp.map((_, index) => {
+//               return (
+//                 <input
+//                   ref={activeOtpIndex === index ? inputRef : null}
+//                   key={index}
+//                   type="number"
+//                   value={otp[index] || ""}
+//                   onChange={handleOtpChange}
+//                   onKeyDown={(e) => handleKeyDown(e, index)}
+//                   className="w-12 h-12 border-2 border-dark-subtle focus:border-white rounded bg-transparent outline-none text-center text-white font-semibold text-xl spin-button-none"
+//                 />
+//               );
+//             })}
+//           </div>
+
+//           <Submit value="Send Link" />
+//         </form>
+//       </Container>
+//     </div>
+//   );
+// }
+
 import React, { useEffect, useRef, useState } from "react";
 import Container from "../Container";
 import Submit from "../form/Submit";
 import Title from "../form/Title";
 
 const OTP_LENGTH = 6;
+
 export default function EmailVerification() {
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
@@ -11,29 +95,44 @@ export default function EmailVerification() {
   const inputRef = useRef();
 
   const focusNextInputField = (index) => {
-    setActiveOtpIndex(index + 1);
+    if (index < OTP_LENGTH - 1) {
+      setActiveOtpIndex(index + 1);
+    }
   };
 
   const focusPrevInputField = (index) => {
-    let nextIndex;
-    const diff = index - 1;
-    nextIndex = diff !== 0 ? diff : 0;
-    setActiveOtpIndex(nextIndex);
+    if (index > 0) {
+      setActiveOtpIndex(index - 1);
+    }
   };
 
-  const handleOtpChange = ({ target }, index) => {
+  const handleOtpChange = ({ target }) => {
     const { value } = target;
     const newOtp = [...otp];
-    newOtp[index] = value.substring(value.length - 1, value.length);
+    newOtp[activeOtpIndex] = value.slice(-1); // Garde seulement le dernier caractère (assurant un seul chiffre)
 
-    if (!value) focusPrevInputField(index);
-    else focusNextInputField(index);
-    setOtp([...newOtp]);
+    setOtp(newOtp);
+
+    if (value) {
+      focusNextInputField(activeOtpIndex);
+    }
+  };
+
+  const handleKeyDown = ({ key }, index) => {
+    console.log(key)
+    if (key === "Backspace" && !otp[index]) {
+      focusPrevInputField(index);
+    } else if (key === "ArrowRight") {
+      focusNextInputField(index);
+    } else if (key === "ArrowLeft") {
+      focusPrevInputField(index);
+    }
   };
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOtpIndex]);
+
   return (
     <div className="fixed inset-0 bg-primary -z-10 flex justify-center items-center">
       <Container>
@@ -51,9 +150,11 @@ export default function EmailVerification() {
                 <input
                   ref={activeOtpIndex === index ? inputRef : null}
                   key={index}
-                  type="number"
+                  type="text"
+                  maxLength="1"
                   value={otp[index] || ""}
-                  onChange={(e) => handleOtpChange(e, index)}
+                  onChange={handleOtpChange}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
                   className="w-12 h-12 border-2 border-dark-subtle focus:border-white rounded bg-transparent outline-none text-center text-white font-semibold text-xl spin-button-none"
                 />
               );
