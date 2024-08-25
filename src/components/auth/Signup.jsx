@@ -6,6 +6,7 @@ import Submit from "../form/Submit";
 import Title from "../form/Title";
 import FormContainer from "../form/FormContainer";
 import { commonModalClasses } from "../../utils/theme";
+import { createUser } from "../../api/auth";
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -37,13 +38,15 @@ export default function Signup() {
     setUserInfo({ ...userInfo, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
 
     if (!ok) return console.log(error);
-    console.log(userInfo);
+    // console.log(userInfo);
+    const response = await createUser(userInfo);
+    if(response.error) return console.log(response.error);
+    console.log(response.user)
   };
 
   const { name, email, password } = userInfo;
