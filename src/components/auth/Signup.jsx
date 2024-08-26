@@ -8,6 +8,8 @@ import FormContainer from "../form/FormContainer";
 import { commonModalClasses } from "../../utils/theme";
 import { createUser } from "../../api/auth";
 import { replace, useNavigate } from "react-router-dom";
+import { useNotification } from "../../hooks";
+
 
 const validateUserInfo = ({ name, email, password }) => {
   const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -36,16 +38,19 @@ export default function Signup() {
     password: "",
   });
 
+
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setUserInfo({ ...userInfo, [name]: value });
   };
 
+  const { updateNotification } = useNotification();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { ok, error } = validateUserInfo(userInfo);
 
-    if (!ok) return console.log(error);
+    if (!ok) return updateNotification("error", error);
     // console.log(userInfo);
     const response = await createUser(userInfo);
     if(response.error) return console.log(response.error);
