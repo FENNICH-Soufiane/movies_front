@@ -5,6 +5,7 @@ import Title from "../form/Title";
 import FormContainer from "../form/FormContainer";
 import { commonModalClasses } from "../../utils/theme";
 import { useLocation, useNavigate } from "react-router-dom";
+import { verifyUserEmail } from "../../api/auth";
 
 
 const OTP_LENGTH = 6;
@@ -24,7 +25,7 @@ export default function EmailVerification() {
 
   const inputRef = useRef();
 
-  const state = useLocation();
+  const {state} = useLocation();
   const user = state?.user;
   console.log(state);
 
@@ -66,10 +67,13 @@ export default function EmailVerification() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if(!isValidOTP(otp)) return console.log('invalid OTP');
     console.log(otp);
+    const {error, message} = await verifyUserEmail({OTP: otp.join(""), userId: user?.id});
+    if(error) return console.log(error);
+    console.log(message);
     
   }
 
