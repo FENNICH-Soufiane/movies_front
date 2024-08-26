@@ -9,6 +9,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const OTP_LENGTH = 6;
 
+const isValidOTP = (otp) => {
+  let valid = false
+  for(let val of otp) {
+    valid = !isNaN(parseInt(val));
+    if(!valid) break;
+  }
+  return valid
+}
+
 export default function EmailVerification() {
   const [otp, setOtp] = useState(new Array(OTP_LENGTH).fill(""));
   const [activeOtpIndex, setActiveOtpIndex] = useState(0);
@@ -59,15 +68,18 @@ export default function EmailVerification() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if(!isValidOTP(otp)) return console.log('invalid OTP');
+    console.log(otp);
+    
   }
 
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOtpIndex]);
 
-  useEffect(() => {
-    if (!user) navigate("/not-found");
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) navigate("/not-found");
+  // }, [user]);
   
   return (
     <FormContainer>
@@ -97,7 +109,7 @@ export default function EmailVerification() {
             })}
           </div>
 
-          <Submit value="Send Link" />
+          <Submit value="Verify Account" />
         </form>
       </Container>
     </FormContainer>
