@@ -29,7 +29,8 @@ export default function Signin() {
 
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
-  console.log(authInfo);
+  const {isPending} = authInfo
+  console.log(authInfo.isPending);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
@@ -52,7 +53,7 @@ export default function Signin() {
           <Title>Sign in</Title>
           <FormInput value={userInfo.email} onChange={handleChange} label="Email" placeholder="john@email.com" name="email" />
           <FormInput value={userInfo.password} onChange={handleChange} label="Password" placeholder="********" name="password" type="password" />
-          <Submit value="Sign in" />
+          <Submit value="Sign in" busy={isPending} />
 
           <div className="flex justify-between">
             <CustomLink to="/auth/forget-password">Forget password</CustomLink>
