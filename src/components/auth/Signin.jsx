@@ -30,7 +30,7 @@ export default function Signin() {
   const { updateNotification } = useNotification();
   const { handleLogin, authInfo } = useAuth();
   const {isPending} = authInfo
-  console.log(authInfo.isPending);
+  console.log(authInfo);
 
   const handleChange = ({ target }) => {
     const { value, name } = target;
